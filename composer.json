@@ -1,11 +1,13 @@
 {
-    "name": "concrete5/sample_composer_package",
-    "description": "Sample package that is installable via composer",
+    "name": "lemonbrain/concrete5_graphql_websocket_security_sample",
+    "description": "GraphQL and websocket security sample package that is installable via composer for concrete 5",
     "type": "concrete5-package",
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
-        "concrete5/core": "^8.2"
+        "concrete5/core": "^8.5.1",
+        "lemonbrain/concrete5_graphql_websocket": "^1.2.9",
+        "lemonbrain/concrete5_graphql_websocket_security": "^1.0.0"
     },
     "autoload": {
         "psr-4": {
