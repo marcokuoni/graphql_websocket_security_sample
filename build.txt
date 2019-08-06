@@ -1,0 +1,4 @@
+Build steps:
+1. cd /srv/test/public/packages/concrete5_graphql_websocket_security_sample
+2. npm install
+3. yarn webpack --watch

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<concrete5-cif version="1.0">
+
+    <themes>
+        <theme package="concrete5_graphql_websocket_security_sample" handle="concrete5_graphql_websocket_security_sample" />
+    </themes>
+
+</concrete5-cif>
