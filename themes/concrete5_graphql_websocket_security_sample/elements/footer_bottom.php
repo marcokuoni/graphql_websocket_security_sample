@@ -10,7 +10,7 @@ $anonymusTokens = json_encode($authorize->loginAndGetTokenFromAnonymus());
 <script>
     window.onload = function() {
         window.concrete5_graphql_websocket_security_sample.configModule({
-            showDebugInfos: false,
+            showDebugInfos: true,
             productivMode: true,
             secureProtocol: '<?= $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? true : false ?>',
             graphqlUrl: '<?= $_SERVER['HTTP_HOST'] . '/index.php/graphql' ?>',

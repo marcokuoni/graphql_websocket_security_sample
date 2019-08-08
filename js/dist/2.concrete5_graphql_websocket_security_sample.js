@@ -95,13 +95,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var LoadableForgotPassword = react_loadable__WEBPACK_IMPORTED_MODULE_3___default()({
   loader: function loader() {
-    return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ../components/ForgotPassword */ "./js/src/components/ForgotPassword.jsx"));
+    return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ../components/ForgotPassword */ "./js/src/components/ForgotPassword.jsx"));
   },
   loading: _components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
 var LoadableLogin = react_loadable__WEBPACK_IMPORTED_MODULE_3___default()({
   loader: function loader() {
-    return __webpack_require__.e(/*! import() */ 5).then(__webpack_require__.bind(null, /*! ../components/Login */ "./js/src/components/Login.jsx"));
+    return Promise.all(/*! import() */[__webpack_require__.e(5), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ../components/Login */ "./js/src/components/Login.jsx"));
   },
   loading: _components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"]
 });

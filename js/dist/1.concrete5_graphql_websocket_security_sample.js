@@ -17,13 +17,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var apollo_link_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! apollo-link-http */ "./node_modules/apollo-link-http/lib/bundle.esm.js");
 /* harmony import */ var apollo_link_ws__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! apollo-link-ws */ "./node_modules/apollo-link-ws/lib/bundle.esm.js");
 /* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-apollo */ "./node_modules/react-apollo/react-apollo.esm.js");
-/* harmony import */ var apollo_utilities__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! apollo-utilities */ "./node_modules/apollo-utilities/lib/bundle.esm.js");
-/* harmony import */ var apollo_cache_inmemory__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! apollo-cache-inmemory */ "./node_modules/apollo-cache-inmemory/lib/bundle.esm.js");
-/* harmony import */ var react_loadable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-loadable */ "./node_modules/react-loadable/lib/index.js");
-/* harmony import */ var react_loadable__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react_loadable__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Loading */ "./js/src/components/Loading.jsx");
-/* harmony import */ var Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! Utils/GetGlobals */ "./js/src/utils/GetGlobals.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+/* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @apollo/react-hooks */ "./node_modules/@apollo/react-hooks/lib/react-hooks.esm.js");
+/* harmony import */ var apollo_utilities__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! apollo-utilities */ "./node_modules/apollo-utilities/lib/bundle.esm.js");
+/* harmony import */ var apollo_cache_inmemory__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! apollo-cache-inmemory */ "./node_modules/apollo-cache-inmemory/lib/bundle.esm.js");
+/* harmony import */ var react_loadable__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-loadable */ "./node_modules/react-loadable/lib/index.js");
+/* harmony import */ var react_loadable__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_loadable__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Loading */ "./js/src/components/Loading.jsx");
+/* harmony import */ var Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! Utils/GetGlobals */ "./js/src/utils/GetGlobals.jsx");
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53,6 +54,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
  // eslint-disable-next-line no-unused-vars
 
 
@@ -61,14 +63,18 @@ function Index() {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Home");
 }
 
-var LoadableLogin = react_loadable__WEBPACK_IMPORTED_MODULE_9___default()({
+localStorage.setItem("token", JSON.parse(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_12__["default"].anonymusTokens).authToken);
+var LoadableLogin = react_loadable__WEBPACK_IMPORTED_MODULE_10___default()({
   loader: function loader() {
     return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ../single_pages/Login */ "./js/src/single_pages/Login.jsx"));
   },
-  loading: _Loading__WEBPACK_IMPORTED_MODULE_10__["default"]
+  loading: _Loading__WEBPACK_IMPORTED_MODULE_11__["default"]
 });
 var httpLink = new apollo_link_http__WEBPACK_IMPORTED_MODULE_4__["HttpLink"]({
-  uri: (Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_11__["default"].secureProtocol ? "https://" : "http://") + Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_11__["default"].graphqlUrl
+  uri: (Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_12__["default"].secureProtocol ? "https://" : "http://") + Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_12__["default"].graphqlUrl,
+  headers: {
+    authorization: "Bearer " + localStorage.getItem("token")
+  }
 }); //https://www.apollographql.com/docs/tutorial/mutations/
 // const wsLink = new WebSocketLink({
 //   uri: (configMap.secureProtocol ? "wss://" : "ws:/") + configMap.websocketUrl,
@@ -88,9 +94,16 @@ var httpLink = new apollo_link_http__WEBPACK_IMPORTED_MODULE_4__["HttpLink"]({
 //   httpLink
 // );
 
+var cache = new apollo_cache_inmemory__WEBPACK_IMPORTED_MODULE_9__["InMemoryCache"](); //.restore(window.__APOLLO_STATE__);
+
 var client = new apollo_client__WEBPACK_IMPORTED_MODULE_2__["default"]({
   link: httpLink,
-  cache: new apollo_cache_inmemory__WEBPACK_IMPORTED_MODULE_8__["InMemoryCache"]().restore(window.__APOLLO_STATE__)
+  cache: cache
+});
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem("token")
+  }
 });
 
 var SPA =
@@ -107,7 +120,10 @@ function (_React$Component) {
   _createClass(SPA, [{
     key: "render",
     value: function render() {
+      Object(Log__WEBPACK_IMPORTED_MODULE_13__["default"])(JSON.parse(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_12__["default"].anonymusTokens).authToken);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_apollo__WEBPACK_IMPORTED_MODULE_6__["ApolloProvider"], {
+        client: client
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_7__["ApolloProvider"], {
         client: client
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["HashRouter"], {
         hashType: "hashbang"
@@ -118,7 +134,7 @@ function (_React$Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
         path: "/login",
         component: LoadableLogin
-      }))));
+      })))));
     }
   }]);
 
