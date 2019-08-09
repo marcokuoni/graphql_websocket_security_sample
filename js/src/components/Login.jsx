@@ -114,6 +114,7 @@ export default function Login() {
     onCompleted({ login }) {
       log(login);
       localStorage.setItem("token", login);
+      //set also current user and refreshToken
       client.writeData({ data: { isLoggedIn: true } });
     }
   });

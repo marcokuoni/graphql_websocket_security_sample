@@ -15,6 +15,7 @@ import Loadable from "react-loadable";
 import Loading from "./Loading";
 
 import configMap from "Utils/GetGlobals";
+import { getToken } from "Utils/Token";
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
@@ -31,7 +32,7 @@ const LoadableLogin = Loadable({
 const httpLink = new HttpLink({
   uri:
     (configMap.secureProtocol ? "https://" : "http://") + configMap.graphqlUrl,
-  headers: { authorization: "Bearer " + localStorage.getItem("token") }
+  headers: { authorization: "Bearer " + getToken() }
 });
 
 //https://www.apollographql.com/docs/tutorial/mutations/
