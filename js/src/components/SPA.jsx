@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter as Router, Route } from "react-router-dom";
+import { HashRouter as Router, Route, Link } from "react-router-dom";
 
 import ApolloClient from "apollo-client";
 import { split } from "apollo-link";
@@ -14,21 +14,41 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import Loadable from "react-loadable";
 import Loading from "./Loading";
 
-import configMap from "Utils/GetGlobals";
-import { getToken } from "Utils/Token";
+import PrivateRoute from "./PrivateRoute";
+
+import configMap, { constants } from "Utils/GetGlobals";
+import { getToken, getIsLoggedIn } from "Utils/Token";
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
 function Index() {
-  return <h2>Home</h2>;
+  return (
+    <div>
+      <h2>Home</h2>
+            <Link to="/me">Me</Link>
+    </div>
+  );
 }
 
-localStorage.setItem("token", JSON.parse(configMap.anonymusTokens).authToken);
+localStorage.setItem(
+  constants.authToken,
+  JSON.parse(configMap.anonymusTokens).authToken
+);
+localStorage.setItem(
+  constants.refreshToken,
+  JSON.parse(configMap.anonymusTokens).refreshToken
+);
 
 const LoadableLogin = Loadable({
   loader: () => import("../single_pages/Login"),
   loading: Loading
 });
+
+const LoadableMe = Loadable({
+  loader: () => import("../single_pages/Me"),
+  loading: Loading
+});
+
 const httpLink = new HttpLink({
   uri:
     (configMap.secureProtocol ? "https://" : "http://") + configMap.graphqlUrl,
@@ -64,13 +84,12 @@ const client = new ApolloClient({
 
 cache.writeData({
   data: {
-    isLoggedIn: !!localStorage.getItem("token")
+    isLoggedIn: getIsLoggedIn()
   }
 });
 
 class SPA extends React.Component {
   render() {
-    log(JSON.parse(configMap.anonymusTokens).authToken);
     return (
       <ApolloProvider client={client}>
         <ApolloHooksProvider client={client}>
@@ -78,6 +97,7 @@ class SPA extends React.Component {
             <div>
               <Route path="/" exact component={Index} />
               <Route path="/login" component={LoadableLogin} />
+              <PrivateRoute path="/me" component={LoadableMe} />
             </div>
           </Router>
         </ApolloHooksProvider>

@@ -34,6 +34,7 @@ class RouteMiddleware implements MiddlewareInterface
 
         if (
             strpos($requestPath, 'dashboard') !== false ||
+            strpos($requestPath, 'graphql') !== false ||
             strpos($requestPath, '#!/') !== false ||
             $requestPath === '/'
         ) {

@@ -291,7 +291,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var LoadableSPA = Object(_loadable_component__WEBPACK_IMPORTED_MODULE_2__["default"])(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1)]).then(__webpack_require__.bind(null, /*! ./components/SPA */ "./js/src/components/SPA.jsx"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, /*! ./components/SPA */ "./js/src/components/SPA.jsx"));
 }, {
   fallback: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_3__["default"], null)
 });
@@ -322,11 +322,12 @@ window.concrete5_graphql_websocket_security_sample = function () {
 /*!*************************************!*\
   !*** ./js/src/utils/GetGlobals.jsx ***!
   \*************************************/
-/*! exports provided: default */
+/*! exports provided: default, constants */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constants", function() { return constants; });
 var configMap = {
   settable_map: {
     showDebugInfos: true,
@@ -343,7 +344,12 @@ var configMap = {
   websocketUrl: null,
   anonymusTokens: null
 };
+var constants = {
+  authToken: "authToken",
+  refreshToken: "refreshToken"
+};
 /* harmony default export */ __webpack_exports__["default"] = (configMap);
+
 
 /***/ }),
 

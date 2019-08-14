@@ -1,16 +1,25 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useApolloClient, useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import Loading from "./Loading";
 
+import { constants } from "Utils/GetGlobals";
 import log from "Log";
 
 const LOGIN_USER = gql`
   mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
+    login(username: $username, password: $password) {
+      authToken
+      refreshToken
+      user {
+        uID
+        uName
+        anonymus
+      }
+    }
   }
 `;
 
@@ -21,7 +30,8 @@ class LoginForm extends React.Component {
     this.state = {
       uName: "",
       uPassword: "",
-      uMaintainLogin: false
+      uMaintainLogin: false,
+      redirectToReferrer: false,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -41,10 +51,20 @@ class LoginForm extends React.Component {
   handleSignInSubmit(event) {
     event.preventDefault();
 
-    this.props.login(this.state.uName, this.state.uPassword);
+    this.props.login({
+      variables: {
+        username: this.state.uName,
+        password: this.state.uPassword
+      }
+    });
   }
 
   render() {
+    let { from } = this.props.location.state || { from: { pathname: "/" } };
+    let { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer) return <Redirect to={from} />;
+
     return (
       <div className="authentication-type authentication-type-concrete active">
         <form onSubmit={this.handleSignInSubmit}>
@@ -105,7 +125,8 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  login: PropTypes.func
+  login: PropTypes.func,
+  location: PropTypes.object,
 };
 
 export default function Login() {
@@ -113,12 +134,18 @@ export default function Login() {
   const [login, { loading, error }] = useMutation(LOGIN_USER, {
     onCompleted({ login }) {
       log(login);
-      localStorage.setItem("token", login);
-      //set also current user and refreshToken
-      client.writeData({ data: { isLoggedIn: true } });
+      if (login && login.user) {
+        localStorage.setItem(constants.authToken, login.authToken);
+        localStorage.setItem(constants.refreshToken, login.refreshToken);
+        //set also current user and refreshToken
+        client.writeData({ data: { isLoggedIn: true } });
+        this.setState({ redirectToReferrer: true });
+      } else {
+        client.writeData({ data: { isLoggedIn: false } });
+      }
     }
   });
-log(error);
+  log(error);
   if (loading) return <Loading />;
   if (error) return <p>An error occurred</p>;
 
