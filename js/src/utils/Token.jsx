@@ -1,36 +1,90 @@
 import jwtDecode from "jwt-decode";
 
-import { constants } from "Utils/GetGlobals";
+import configMap from "./GetGlobals";
+// eslint-disable-next-line no-unused-vars
 import log from "Log";
 
-const getToken = function() {
-  const currentToken = localStorage.getItem(constants.authToken);
+let authToken = null;
 
-  if (currentToken && jwtDecode(currentToken).exp < Date.now() / 1000) {
-    log("refresh");
-    const currentRefreshToken = localStorage.getItem(constants.refreshToken);
-    localStorage.clear();
-    //refreshToken(currentRefreshToken)
+const initToken = function() {
+  authToken = configMap.anonymusToken;
+};
+
+const isTokenExpired = function() {
+  const currentToken = authToken;
+  log(jwtDecode(currentToken).exp)
+  log(new Date().getTime() / 1000)
+  log(
+    parseInt(jwtDecode(currentToken).exp) - 15 > Math.round(new Date().getTime() / 1000))
+
+  if (
+    currentToken &&
+    parseInt(jwtDecode(currentToken).exp) - 15 > Math.round(new Date().getTime() / 1000)
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
+const getToken = function() {
+  const currentToken = authToken;
+
+  if (
+    currentToken &&
+    parseInt(jwtDecode(currentToken).exp) < Math.round(new Date().getTime() / 1000)
+  ) {
+    return false;
   }
 
   return currentToken;
 };
 
-const getIsLoggedIn = function() {
-  const currentToken = localStorage.getItem(constants.authToken);
+const setIsLoggedIn = function(authTokenInput) {
+  if (authTokenInput) {
+    authToken = authTokenInput;
+  }
+  const user = jwtDecode(authToken).data.user;
+  log(user)
+  log('login');
+  return getIsLoggedIn();
+};
 
-  if (currentToken && jwtDecode(currentToken).exp >= Date.now() / 1000) {
-      log(jwtDecode(localStorage.getItem(constants.authToken)));
-    if (
-      parseInt(
-        jwtDecode(localStorage.getItem(constants.authToken)).data.user.uID
-      ) > 0 && jwtDecode(localStorage.getItem(constants.authToken)).data.user.anonymus !== true
-    ) {
-      return true;
+const setLoggedOut = function() {
+  authToken = '';
+  log('logout')
+  return getIsLoggedIn();
+};
+
+const getIsLoggedIn = function() {
+  const currentToken = authToken;
+
+  if (currentToken) {
+    const user = jwtDecode(currentToken).data.user;
+    if (parseInt(user.uID) > 0 && user.anonymus !== true) {
+      const isLoggedInEvent = new CustomEvent("isloggedin", {
+        detail: user
+      });
+      window.dispatchEvent(isLoggedInEvent);
+
+      return user;
     }
   }
 
+  const isLoggedInEvent = new CustomEvent("isloggedin", {
+    detail: {
+      isLoggedIn: false
+    }
+  });
+  window.dispatchEvent(isLoggedInEvent);
   return false;
 };
 
-export { getToken, getIsLoggedIn };
+export {
+  initToken,
+  getToken,
+  getIsLoggedIn,
+  setIsLoggedIn,
+  setLoggedOut,
+  isTokenExpired
+};

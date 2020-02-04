@@ -3,7 +3,7 @@
 use Concrete\Core\Support\Facade\Application as App;
 
 $authorize = App::make(\Helpers\Authorize::class);
-$anonymusTokens = json_encode($authorize->loginAndGetTokenFromAnonymus());
+$anonymusToken = $authorize->loginAndGetTokenFromAnonymus();
 ?>
 
 <?php Loader::element('footer_required'); ?>
@@ -14,8 +14,9 @@ $anonymusTokens = json_encode($authorize->loginAndGetTokenFromAnonymus());
             productivMode: true,
             secureProtocol: '<?= $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? true : false ?>',
             graphqlUrl: '<?= $_SERVER['HTTP_HOST'] . '/index.php/graphql' ?>',
+            refreshTokenUrl: '<?= $_SERVER['HTTP_HOST'] . '/index.php/refresh_token' ?>',
             websocketUrl: '<?= $_SERVER['HTTP_HOST'] . '/wss2/' ?>',
-            anonymusTokens: '<?= $anonymusTokens ?>',
+            anonymusToken: '<?= $anonymusToken ?>',
         });
         window.concrete5_graphql_websocket_security_sample.initModule();
 

@@ -4,23 +4,17 @@ const configMap = {
     productivMode: true,
     secureProtocol: true,
     graphqlUrl: true,
+    refreshTokenUrl: true,
     websocketUrl: true,
-    anonymusTokens: true
+    anonymusToken: true
   },
   showDebugInfos: true,
   productivMode: false,
   secureProtocol: null,
   graphqlUrl: null,
+  refreshTokenUrl: null,
   websocketUrl: null,
-  anonymusTokens: null
-};
-
-const constants = {
-  authToken: "authToken",
-  refreshToken: "refreshToken"
+  anonymusToken: null
 };
 
 export default configMap;
-export {
-    constants
-}

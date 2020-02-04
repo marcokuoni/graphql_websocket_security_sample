@@ -8,6 +8,8 @@ import {
 import { getIsLoggedIn } from "Utils/Token";
 
 function PrivateRoute({ component: Component, ...rest }) {
+    console.log('test');
+    console.log(getIsLoggedIn());
   return (
     <Route
       {...rest}
@@ -28,7 +30,7 @@ function PrivateRoute({ component: Component, ...rest }) {
 }
 
 PrivateRoute.propTypes = {
-    component: PropTypes.object,
+    component: PropTypes.func,
     location: PropTypes.string,
 };
 

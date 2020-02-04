@@ -69,7 +69,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_loadable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_loadable__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loading */ "./js/src/components/Loading.jsx");
 /* harmony import */ var _oldJquery_LoadBackground__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../oldJquery/LoadBackground */ "./js/src/oldJquery/LoadBackground.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -95,13 +95,19 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var LoadableForgotPassword = react_loadable__WEBPACK_IMPORTED_MODULE_3___default()({
   loader: function loader() {
-    return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ../components/ForgotPassword */ "./js/src/components/ForgotPassword.jsx"));
+    return Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(5)]).then(__webpack_require__.bind(null, /*! ../components/ForgotPassword */ "./js/src/components/ForgotPassword.jsx"));
+  },
+  loading: _components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"]
+});
+var LoadableChangePassword = react_loadable__WEBPACK_IMPORTED_MODULE_3___default()({
+  loader: function loader() {
+    return Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ../components/ChangePassword */ "./js/src/components/ChangePassword.jsx"));
   },
   loading: _components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
 var LoadableLogin = react_loadable__WEBPACK_IMPORTED_MODULE_3___default()({
   loader: function loader() {
-    return Promise.all(/*! import() */[__webpack_require__.e(1), __webpack_require__.e(5)]).then(__webpack_require__.bind(null, /*! ../components/Login */ "./js/src/components/Login.jsx"));
+    return Promise.all(/*! import() */[__webpack_require__.e(8), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ../components/Login */ "./js/src/components/Login.jsx"));
   },
   loading: _components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
@@ -141,6 +147,9 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "".concat(match.path, "/concrete/forgot_password"),
         component: LoadableForgotPassword
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "".concat(match.path, "/concrete/change-password/:token"),
+        component: LoadableChangePassword
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         exact: true,
         path: match.path,
