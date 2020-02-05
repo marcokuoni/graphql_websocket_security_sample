@@ -293,7 +293,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var LoadableSPA = Object(_loadable_component__WEBPACK_IMPORTED_MODULE_2__["default"])(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e(1), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, /*! ./components/SPA */ "./js/src/components/SPA.jsx"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1)]).then(__webpack_require__.bind(null, /*! ./components/SPA */ "./js/src/components/SPA.jsx"));
 }, {
   fallback: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_3__["default"], null)
 });
@@ -337,6 +337,7 @@ var configMap = {
     secureProtocol: true,
     graphqlUrl: true,
     refreshTokenUrl: true,
+    logoutUrl: true,
     websocketUrl: true,
     anonymusToken: true
   },
@@ -345,6 +346,7 @@ var configMap = {
   secureProtocol: null,
   graphqlUrl: null,
   refreshTokenUrl: null,
+  logoutUrl: null,
   websocketUrl: null,
   anonymusToken: null
 };
@@ -493,9 +495,6 @@ var initToken = function initToken() {
 
 var isTokenExpired = function isTokenExpired() {
   var currentToken = authToken;
-  Object(Log__WEBPACK_IMPORTED_MODULE_2__["default"])(jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).exp);
-  Object(Log__WEBPACK_IMPORTED_MODULE_2__["default"])(new Date().getTime() / 1000);
-  Object(Log__WEBPACK_IMPORTED_MODULE_2__["default"])(parseInt(jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).exp) - 15 > Math.round(new Date().getTime() / 1000));
 
   if (currentToken && parseInt(jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).exp) - 15 > Math.round(new Date().getTime() / 1000)) {
     return false;
@@ -505,13 +504,7 @@ var isTokenExpired = function isTokenExpired() {
 };
 
 var getToken = function getToken() {
-  var currentToken = authToken;
-
-  if (currentToken && parseInt(jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).exp) < Math.round(new Date().getTime() / 1000)) {
-    return false;
-  }
-
-  return currentToken;
+  return authToken;
 };
 
 var setIsLoggedIn = function setIsLoggedIn(authTokenInput) {
@@ -519,15 +512,11 @@ var setIsLoggedIn = function setIsLoggedIn(authTokenInput) {
     authToken = authTokenInput;
   }
 
-  var user = jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(authToken).data.user;
-  Object(Log__WEBPACK_IMPORTED_MODULE_2__["default"])(user);
-  Object(Log__WEBPACK_IMPORTED_MODULE_2__["default"])('login');
   return getIsLoggedIn();
 };
 
 var setLoggedOut = function setLoggedOut() {
   authToken = '';
-  Object(Log__WEBPACK_IMPORTED_MODULE_2__["default"])('logout');
   return getIsLoggedIn();
 };
 
@@ -537,7 +526,7 @@ var getIsLoggedIn = function getIsLoggedIn() {
   if (currentToken) {
     var user = jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).data.user;
 
-    if (parseInt(user.uID) > 0 && user.anonymus !== true) {
+    if (parseInt(user.uID) > 0) {
       var _isLoggedInEvent = new CustomEvent("isloggedin", {
         detail: user
       });

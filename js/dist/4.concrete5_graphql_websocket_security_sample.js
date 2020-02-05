@@ -1,15 +1,15 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
 
-/***/ "./js/src/components/ChangePassword.jsx":
+/***/ "./js/src/components/ForgotPassword.jsx":
 /*!**********************************************!*\
-  !*** ./js/src/components/ChangePassword.jsx ***!
+  !*** ./js/src/components/ForgotPassword.jsx ***!
   \**********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ChangePassword; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ForgotPassword; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
@@ -48,7 +48,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    mutation changePassword(\n        $password: String!\n        $passwordConfirm: String!\n        $token: String!\n    ) {\n        changePassword(\n            password: $password\n            passwordConfirm: $passwordConfirm\n            token: $token\n        )\n    }\n"]);
+  var data = _taggedTemplateLiteral(["\n    mutation forgotPassword($username: String!, $currentLanguage: String!) {\n        forgotPassword(username: $username, currentLanguage: $currentLanguage)\n    }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -66,30 +66,28 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
  // eslint-disable-next-line no-unused-vars
 
 
-var CHANGE_PASSWORD = graphql_tag__WEBPACK_IMPORTED_MODULE_3___default()(_templateObject());
+var FORGOT_PASSWORD = graphql_tag__WEBPACK_IMPORTED_MODULE_3___default()(_templateObject());
 
-var ChangePasswordForm =
+var ForgotPasswordForm =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(ChangePasswordForm, _React$Component);
+  _inherits(ForgotPasswordForm, _React$Component);
 
-  function ChangePasswordForm(props) {
+  function ForgotPasswordForm(props) {
     var _this;
 
-    _classCallCheck(this, ChangePasswordForm);
+    _classCallCheck(this, ForgotPasswordForm);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(ChangePasswordForm).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ForgotPasswordForm).call(this, props));
     _this.state = {
-      password: "",
-      passwordConfirm: "",
-      token: ""
+      uName: ""
     };
     _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     return _this;
   }
 
-  _createClass(ChangePasswordForm, [{
+  _createClass(ForgotPasswordForm, [{
     key: "handleInputChange",
     value: function handleInputChange(event) {
       var target = event.target;
@@ -101,12 +99,10 @@ function (_React$Component) {
     key: "handleSubmit",
     value: function handleSubmit(event) {
       event.preventDefault();
-      var match = this.props.match;
-      this.props.changePassword({
+      this.props.forgotPassword({
         variables: {
-          password: this.state.password,
-          passwordConfirm: this.state.passwordConfirm,
-          token: match.params.token
+          username: this.state.uName,
+          currentLanguage: "DE"
         }
       });
     }
@@ -114,14 +110,17 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var answer = this.props.answer;
-
-      if (answer === "") {
-        this.props.history.push("/login");
-      }
-
+      Object(Log__WEBPACK_IMPORTED_MODULE_5__["default"])(answer);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "forgotPassword"
-      }, answer && answer !== "" && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, answer === '' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Anweisungen zum Zur\xFCcksetzen gesendet"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "ccm-message"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "help-block"
+      }, "Wenn diese E-Mail-Adresse einem Konto zugeordnet ist, wurde eine E-Mail mit Anweisungen zum Zur\xFCcksetzen des Passwortes an diese Adresse gesendet.", " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: "/",
+        className: "btn btn-block btn-primary"
+      }, "Zur\xFCck", " ")), answer && answer !== '' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "ccm-system-errors alert alert-danger alert-dismissable"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "button",
@@ -129,83 +128,58 @@ function (_React$Component) {
         "data-dismiss": "alert"
       }, "\xD7"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, answer)), answer === null && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
         onSubmit: this.handleSubmit
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Reset Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Forgot Your Password?"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "help-block"
-      }, "Enter your new password below."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "change-password"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Enter your email address below. We will send you instructions to reset your password."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-group"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "control-label",
-        htmlFor: "uPassword"
-      }, "New Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "password",
-        name: "password",
-        id: "password",
+        htmlFor: "uName"
+      }, "Email Address"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        name: "uName",
+        id: "uName",
         className: "form-control",
         autoFocus: "autofocus",
-        autoComplete: "off",
-        value: this.state.password,
+        value: this.state.uName,
         onChange: this.handleInputChange
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-group"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-        className: "control-label",
-        htmlFor: "uPassword"
-      }, "Confirm New Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "password",
-        name: "passwordConfirm",
-        id: "passwordConfirm",
-        className: "form-control",
-        autoComplete: "off",
-        value: this.state.passwordConfirm,
-        onChange: this.handleInputChange
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-group"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "btn btn-primary"
-      }, "Change password and sign in")))));
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        name: "resetPassword",
+        className: "btn btn-primary btn-block"
+      }, "Reset and Email Password")));
     }
   }]);
 
-  return ChangePasswordForm;
+  return ForgotPasswordForm;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-ChangePasswordForm.propTypes = {
-  changePassword: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+ForgotPasswordForm.propTypes = {
+  forgotPassword: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
   location: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
-  answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
-  match: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
-  history: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object
+  answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
 };
-function ChangePassword(_ref) {
-  var match = _ref.match,
-      history = _ref.history;
-
+function ForgotPassword() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
       _useState2 = _slicedToArray(_useState, 2),
       answer = _useState2[0],
       setAnswer = _useState2[1];
 
-  var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(CHANGE_PASSWORD, {
-    onCompleted: function onCompleted(_ref2) {
-      var changePassword = _ref2.changePassword;
-      setAnswer(changePassword);
+  var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(FORGOT_PASSWORD, {
+    onCompleted: function onCompleted(_ref) {
+      var forgotPassword = _ref.forgotPassword;
+      setAnswer(forgotPassword);
     }
   }),
       _useMutation2 = _slicedToArray(_useMutation, 2),
-      changePassword = _useMutation2[0],
+      forgotPassword = _useMutation2[0],
       _useMutation2$ = _useMutation2[1],
       loading = _useMutation2$.loading,
       error = _useMutation2$.error;
 
   if (loading) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Loading__WEBPACK_IMPORTED_MODULE_4__["default"], null);
   if (error) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "An error occurred");
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ChangePasswordForm, {
-    changePassword: changePassword,
-    answer: answer,
-    match: match,
-    history: history
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ForgotPasswordForm, {
+    forgotPassword: forgotPassword,
+    answer: answer
   });
 }
 

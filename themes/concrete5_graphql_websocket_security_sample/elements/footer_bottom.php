@@ -11,10 +11,11 @@ $anonymusToken = $authorize->loginAndGetTokenFromAnonymus();
     window.onload = function() {
         window.concrete5_graphql_websocket_security_sample.configModule({
             showDebugInfos: true,
-            productivMode: true,
+            productivMode: false,
             secureProtocol: '<?= $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? true : false ?>',
             graphqlUrl: '<?= $_SERVER['HTTP_HOST'] . '/index.php/graphql' ?>',
             refreshTokenUrl: '<?= $_SERVER['HTTP_HOST'] . '/index.php/refresh_token' ?>',
+            logoutUrl: '<?= $_SERVER['HTTP_HOST'] . '/index.php/logout_token' ?>',
             websocketUrl: '<?= $_SERVER['HTTP_HOST'] . '/wss2/' ?>',
             anonymusToken: '<?= $anonymusToken ?>',
         });

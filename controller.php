@@ -21,9 +21,9 @@ class Controller extends Package
 
     public function on_start()
     {
-        $this->app->extend(ServerInterface::class, function (ServerInterface $server) {
-            return $server->addMiddleware($this->app->make(\Helpers\RouteMiddleware::class));
-        });
+        // $this->app->extend(ServerInterface::class, function (ServerInterface $server) {
+        //     return $server->addMiddleware($this->app->make(\Helpers\RouteMiddleware::class));
+        // });
         $al = AssetList::getInstance();
         $al->register(
             'javascript',

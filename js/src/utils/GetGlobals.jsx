@@ -5,6 +5,7 @@ const configMap = {
     secureProtocol: true,
     graphqlUrl: true,
     refreshTokenUrl: true,
+    logoutUrl: true,
     websocketUrl: true,
     anonymusToken: true
   },
@@ -13,6 +14,7 @@ const configMap = {
   secureProtocol: null,
   graphqlUrl: null,
   refreshTokenUrl: null,
+  logoutUrl: null,
   websocketUrl: null,
   anonymusToken: null
 };

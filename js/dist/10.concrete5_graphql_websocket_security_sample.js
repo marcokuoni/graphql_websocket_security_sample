@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[7],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[10],{
 
 /***/ "./js/src/single_pages/Me.jsx":
 /*!************************************!*\
@@ -130,7 +130,7 @@ function Me(_ref) {
       var logoutAnswer = _ref2.logout;
       Object(Utils_Token__WEBPACK_IMPORTED_MODULE_5__["setIsLoggedIn"])(logoutAnswer.authToken);
       Object(Utils_Token__WEBPACK_IMPORTED_MODULE_5__["setLoggedOut"])();
-      history.push("/");
+      history.push("/login");
     }
   }),
       _useMutation2 = _slicedToArray(_useMutation, 2),
@@ -156,4 +156,4 @@ function Me(_ref) {
 /***/ })
 
 }]);
-//# sourceMappingURL=7.concrete5_graphql_websocket_security_sample.js.map
+//# sourceMappingURL=10.concrete5_graphql_websocket_security_sample.js.map

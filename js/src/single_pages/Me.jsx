@@ -4,14 +4,17 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import Loading from "../components/Loading";
-import { setLoggedOut } from "Utils/Token";
+import { setLoggedOut, setIsLoggedIn } from "Utils/Token";
 
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
 const LOGOUT = gql`
     mutation logout {
-        logout
+        logout {
+            authToken
+            error
+        }
     }
 `;
 
@@ -26,14 +29,13 @@ const ME = gql`
 
 class MeForm extends React.Component {
   render() {
-      log(this.props.data);
     return (
       <div>
           <br/><br/><br/><br/><br/><br/>
           <br/><br/><br/><br/><br/><br/>
         Me
         <p>
-            Welcome!{" "}
+            Welcome {this.props.data ? this.props.data.me.uName : ''} {this.props.data ? this.props.data.me.anonymus : ''}
             <button
                 onClick={() => {
                     this.props.logout();
@@ -66,17 +68,15 @@ export default function Me({ location, history }) {
     const [answer, setAnswer] = useState(null);
     const [logout, { loading, error }] = useMutation(LOGOUT, {
         onCompleted({ logout: logoutAnswer }) {
-            setAnswer(logoutAnswer );
+            setIsLoggedIn(logoutAnswer.authToken);
+            setLoggedOut();
+            history.push("/login");
         }
     });
 
   const {  data, refetch } = useQuery(ME);
     if (loading) return <Loading />;
     if (error) return <p>An error occurred</p>;
-    if (answer) {
-        setLoggedOut();
-        history.push("/");
-    }
 
     return <MeForm logout={logout} answer={answer} data={data} refetch={refetch} />;
 }
