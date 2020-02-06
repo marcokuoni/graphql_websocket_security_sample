@@ -19,7 +19,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! graphql-tag */ "./node_modules/graphql-tag/src/index.js");
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loading */ "./js/src/components/Loading.jsx");
-/* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
+/* harmony import */ var Utils_UserContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Utils/UserContext */ "./js/src/utils/UserContext.jsx");
 /* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -178,9 +178,18 @@ LoginForm.propTypes = {
   location: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
   error: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
 };
+Login.propTypes = {
+  location: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  history: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object
+};
 function Login(_ref) {
   var location = _ref.location,
       history = _ref.history;
+
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(Utils_UserContext__WEBPACK_IMPORTED_MODULE_6__["UserContext"]),
+      _useContext2 = _slicedToArray(_useContext, 2),
+      user = _useContext2[0],
+      setUser = _useContext2[1];
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
       _useState2 = _slicedToArray(_useState, 2),
@@ -190,11 +199,13 @@ function Login(_ref) {
   var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_3__["useMutation"])(LOGIN_USER, {
     onCompleted: function onCompleted(_ref2) {
       var login = _ref2.login;
-      Object(Utils_Token__WEBPACK_IMPORTED_MODULE_6__["setIsLoggedIn"])(login.authToken);
 
       if (login && login.error && login.error !== "") {
         setError(login.error);
       } else if (login.authToken !== '') {
+        setUser({
+          token: login.authToken
+        });
         history.push("/me");
       }
     }

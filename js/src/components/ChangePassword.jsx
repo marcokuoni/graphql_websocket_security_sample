@@ -61,13 +61,13 @@ class ChangePasswordForm extends React.Component {
     render() {
         const answer = this.props.answer;
 
-        if (answer === "") {
+        if (answer && answer.length === 0) {
             this.props.history.push("/login");
         }
 
         return (
             <div className="forgotPassword">
-                {answer && answer !== "" && (
+                {answer && answer.length > 0 && (
                     <div className="ccm-system-errors alert alert-danger alert-dismissable">
                         <button
                             type="button"
@@ -137,7 +137,7 @@ class ChangePasswordForm extends React.Component {
 ChangePasswordForm.propTypes = {
     changePassword: PropTypes.func,
     location: PropTypes.object,
-    answer: PropTypes.string,
+    answer: PropTypes.array,
     match: PropTypes.object,
     history: PropTypes.object
 };

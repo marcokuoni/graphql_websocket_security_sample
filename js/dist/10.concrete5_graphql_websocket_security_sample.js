@@ -18,7 +18,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! graphql-tag */ "./node_modules/graphql-tag/src/index.js");
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loading */ "./js/src/components/Loading.jsx");
-/* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
+/* harmony import */ var Utils_UserContext__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! Utils/UserContext */ "./js/src/utils/UserContext.jsx");
 /* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
@@ -95,7 +95,7 @@ function (_React$Component) {
     value: function render() {
       var _this = this;
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Me", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Welcome ", this.props.data ? this.props.data.me.uName : '', " ", this.props.data ? this.props.data.me.anonymus : '', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Me", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Welcome ", this.props.data ? this.props.data.me.uName : "", " ", this.props.data ? this.props.data.me.anonymus : "", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: function onClick() {
           _this.props.logout();
         }
@@ -116,20 +116,27 @@ MeForm.propTypes = {
   data: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
   answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool
 };
+Me.propTypes = {
+  history: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object
+};
 function Me(_ref) {
-  var location = _ref.location,
-      history = _ref.history;
+  var history = _ref.history;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      answer = _useState2[0],
-      setAnswer = _useState2[1];
+  var _useQuery = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useQuery"])(ME),
+      data = _useQuery.data,
+      refetch = _useQuery.refetch;
+
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(Utils_UserContext__WEBPACK_IMPORTED_MODULE_5__["UserContext"]),
+      _useContext2 = _slicedToArray(_useContext, 2),
+      user = _useContext2[0],
+      setUser = _useContext2[1];
 
   var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGOUT, {
     onCompleted: function onCompleted(_ref2) {
       var logoutAnswer = _ref2.logout;
-      Object(Utils_Token__WEBPACK_IMPORTED_MODULE_5__["setIsLoggedIn"])(logoutAnswer.authToken);
-      Object(Utils_Token__WEBPACK_IMPORTED_MODULE_5__["setLoggedOut"])();
+      setUser({
+        token: logoutAnswer.authToken
+      });
       history.push("/login");
     }
   }),
@@ -139,15 +146,13 @@ function Me(_ref) {
       loading = _useMutation2$.loading,
       error = _useMutation2$.error;
 
-  var _useQuery = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useQuery"])(ME),
-      data = _useQuery.data,
-      refetch = _useQuery.refetch;
-
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    refetch();
+  }, [user]);
   if (loading) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"], null);
   if (error) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "An error occurred");
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MeForm, {
     logout: logout,
-    answer: answer,
     data: data,
     refetch: refetch
   });

@@ -282,9 +282,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Loading */ "./js/src/components/Loading.jsx");
 /* harmony import */ var Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! Utils/GetGlobals */ "./js/src/utils/GetGlobals.jsx");
 /* harmony import */ var Utils_SetConfigMap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! Utils/SetConfigMap */ "./js/src/utils/SetConfigMap.jsx");
-/* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
-
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 
 
 
@@ -308,9 +306,8 @@ window.concrete5_graphql_websocket_security_sample = function () {
   };
 
   var initModule = function initModule() {
-    Object(Utils_Token__WEBPACK_IMPORTED_MODULE_6__["initToken"])();
     react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(LoadableSPA, null), document.querySelector("#spa"));
-    Object(Log__WEBPACK_IMPORTED_MODULE_7__["default"])("It is running, jap", true);
+    Object(Log__WEBPACK_IMPORTED_MODULE_6__["default"])("It is running, jap", true);
   };
 
   return {
@@ -461,91 +458,6 @@ var setConfigMap = function setConfigMap(arg_map) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (setConfigMap);
-
-/***/ }),
-
-/***/ "./js/src/utils/Token.jsx":
-/*!********************************!*\
-  !*** ./js/src/utils/Token.jsx ***!
-  \********************************/
-/*! exports provided: initToken, getToken, getIsLoggedIn, setIsLoggedIn, setLoggedOut, isTokenExpired */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initToken", function() { return initToken; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getToken", function() { return getToken; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIsLoggedIn", function() { return getIsLoggedIn; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setIsLoggedIn", function() { return setIsLoggedIn; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setLoggedOut", function() { return setLoggedOut; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTokenExpired", function() { return isTokenExpired; });
-/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
-/* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _GetGlobals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GetGlobals */ "./js/src/utils/GetGlobals.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
-
- // eslint-disable-next-line no-unused-vars
-
-
-var authToken = null;
-
-var initToken = function initToken() {
-  authToken = _GetGlobals__WEBPACK_IMPORTED_MODULE_1__["default"].anonymusToken;
-};
-
-var isTokenExpired = function isTokenExpired() {
-  var currentToken = authToken;
-
-  if (currentToken && parseInt(jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).exp) - 15 > Math.round(new Date().getTime() / 1000)) {
-    return false;
-  }
-
-  return true;
-};
-
-var getToken = function getToken() {
-  return authToken;
-};
-
-var setIsLoggedIn = function setIsLoggedIn(authTokenInput) {
-  if (authTokenInput) {
-    authToken = authTokenInput;
-  }
-
-  return getIsLoggedIn();
-};
-
-var setLoggedOut = function setLoggedOut() {
-  authToken = '';
-  return getIsLoggedIn();
-};
-
-var getIsLoggedIn = function getIsLoggedIn() {
-  var currentToken = authToken;
-
-  if (currentToken) {
-    var user = jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(currentToken).data.user;
-
-    if (parseInt(user.uID) > 0) {
-      var _isLoggedInEvent = new CustomEvent("isloggedin", {
-        detail: user
-      });
-
-      window.dispatchEvent(_isLoggedInEvent);
-      return user;
-    }
-  }
-
-  var isLoggedInEvent = new CustomEvent("isloggedin", {
-    detail: {
-      isLoggedIn: false
-    }
-  });
-  window.dispatchEvent(isLoggedInEvent);
-  return false;
-};
-
-
 
 /***/ }),
 
@@ -11529,137 +11441,6 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 }
 
 module.exports = hoistNonReactStatics;
-
-
-/***/ }),
-
-/***/ "./node_modules/jwt-decode/lib/atob.js":
-/*!*********************************************!*\
-  !*** ./node_modules/jwt-decode/lib/atob.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * The code was extracted from:
- * https://github.com/davidchambers/Base64.js
- */
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-function InvalidCharacterError(message) {
-  this.message = message;
-}
-
-InvalidCharacterError.prototype = new Error();
-InvalidCharacterError.prototype.name = 'InvalidCharacterError';
-
-function polyfill (input) {
-  var str = String(input).replace(/=+$/, '');
-  if (str.length % 4 == 1) {
-    throw new InvalidCharacterError("'atob' failed: The string to be decoded is not correctly encoded.");
-  }
-  for (
-    // initialize result and counters
-    var bc = 0, bs, buffer, idx = 0, output = '';
-    // get next character
-    buffer = str.charAt(idx++);
-    // character found in table? initialize bit storage and add its ascii value;
-    ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
-      // and if not first of each 4 characters,
-      // convert the first 8 bits to one ascii character
-      bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
-  ) {
-    // try to find character in table (0-63, not found => -1)
-    buffer = chars.indexOf(buffer);
-  }
-  return output;
-}
-
-
-module.exports = typeof window !== 'undefined' && window.atob && window.atob.bind(window) || polyfill;
-
-
-/***/ }),
-
-/***/ "./node_modules/jwt-decode/lib/base64_url_decode.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/jwt-decode/lib/base64_url_decode.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var atob = __webpack_require__(/*! ./atob */ "./node_modules/jwt-decode/lib/atob.js");
-
-function b64DecodeUnicode(str) {
-  return decodeURIComponent(atob(str).replace(/(.)/g, function (m, p) {
-    var code = p.charCodeAt(0).toString(16).toUpperCase();
-    if (code.length < 2) {
-      code = '0' + code;
-    }
-    return '%' + code;
-  }));
-}
-
-module.exports = function(str) {
-  var output = str.replace(/-/g, "+").replace(/_/g, "/");
-  switch (output.length % 4) {
-    case 0:
-      break;
-    case 2:
-      output += "==";
-      break;
-    case 3:
-      output += "=";
-      break;
-    default:
-      throw "Illegal base64url string!";
-  }
-
-  try{
-    return b64DecodeUnicode(output);
-  } catch (err) {
-    return atob(output);
-  }
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/jwt-decode/lib/index.js":
-/*!**********************************************!*\
-  !*** ./node_modules/jwt-decode/lib/index.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var base64_url_decode = __webpack_require__(/*! ./base64_url_decode */ "./node_modules/jwt-decode/lib/base64_url_decode.js");
-
-function InvalidTokenError(message) {
-  this.message = message;
-}
-
-InvalidTokenError.prototype = new Error();
-InvalidTokenError.prototype.name = 'InvalidTokenError';
-
-module.exports = function (token,options) {
-  if (typeof token !== 'string') {
-    throw new InvalidTokenError('Invalid token specified');
-  }
-
-  options = options || {};
-  var pos = options.header === true ? 0 : 1;
-  try {
-    return JSON.parse(base64_url_decode(token.split('.')[pos]));
-  } catch (e) {
-    throw new InvalidTokenError('Invalid token specified: ' + e.message);
-  }
-};
-
-module.exports.InvalidTokenError = InvalidTokenError;
 
 
 /***/ }),

@@ -6,7 +6,6 @@ import Loading from './components/Loading';
 
 import configMap from "Utils/GetGlobals";
 import SetConfigMap from "Utils/SetConfigMap";
-import { initToken } from "Utils/Token";
 import log from "Log";
 
 const LoadableSPA = loadable(() => import("./components/SPA"), {
@@ -23,7 +22,6 @@ window.concrete5_graphql_websocket_security_sample = (function() {
   };
 
   const initModule = function() {
-    initToken();
 
     ReactDOM.render(
       <LoadableSPA />,

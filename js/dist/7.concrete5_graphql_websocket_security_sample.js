@@ -1,15 +1,15 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[7],{
 
-/***/ "./js/src/single_pages/Me.jsx":
-/*!************************************!*\
-  !*** ./js/src/single_pages/Me.jsx ***!
-  \************************************/
+/***/ "./js/src/components/ChangePassword.jsx":
+/*!**********************************************!*\
+  !*** ./js/src/components/ChangePassword.jsx ***!
+  \**********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Me; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ChangePassword; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
@@ -17,9 +17,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @apollo/react-hooks */ "./node_modules/@apollo/react-hooks/lib/react-hooks.esm.js");
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! graphql-tag */ "./node_modules/graphql-tag/src/index.js");
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loading */ "./js/src/components/Loading.jsx");
-/* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+/* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Loading */ "./js/src/components/Loading.jsx");
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -30,6 +29,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -38,26 +39,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n    query me {\n        me {\n            uName\n            anonymus\n        }\n    }\n"]);
-
-  _templateObject2 = function _templateObject2() {
-    return data;
-  };
-
-  return data;
-}
-
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n    mutation logout {\n        logout {\n            authToken\n            error\n        }\n    }\n"]);
+  var data = _taggedTemplateLiteral(["\n    mutation changePassword(\n        $password: String!\n        $passwordConfirm: String!\n        $token: String!\n    ) {\n        changePassword(\n            password: $password\n            passwordConfirm: $passwordConfirm\n            token: $token\n        )\n    }\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -72,52 +63,123 @@ function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(
 
 
 
-
  // eslint-disable-next-line no-unused-vars
 
 
-var LOGOUT = graphql_tag__WEBPACK_IMPORTED_MODULE_3___default()(_templateObject());
-var ME = graphql_tag__WEBPACK_IMPORTED_MODULE_3___default()(_templateObject2());
+var CHANGE_PASSWORD = graphql_tag__WEBPACK_IMPORTED_MODULE_3___default()(_templateObject());
 
-var MeForm =
+var ChangePasswordForm =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(MeForm, _React$Component);
+  _inherits(ChangePasswordForm, _React$Component);
 
-  function MeForm() {
-    _classCallCheck(this, MeForm);
+  function ChangePasswordForm(props) {
+    var _this;
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MeForm).apply(this, arguments));
+    _classCallCheck(this, ChangePasswordForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ChangePasswordForm).call(this, props));
+    _this.state = {
+      password: "",
+      passwordConfirm: "",
+      token: ""
+    };
+    _this.handleInputChange = _this.handleInputChange.bind(_assertThisInitialized(_this));
+    _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
-  _createClass(MeForm, [{
+  _createClass(ChangePasswordForm, [{
+    key: "handleInputChange",
+    value: function handleInputChange(event) {
+      var target = event.target;
+      var value = target.type === "checkbox" ? target.checked : target.value;
+      var name = target.name;
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(event) {
+      event.preventDefault();
+      var match = this.props.match;
+      this.props.changePassword({
+        variables: {
+          password: this.state.password,
+          passwordConfirm: this.state.passwordConfirm,
+          token: match.params.token
+        }
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this = this;
+      var answer = this.props.answer;
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Me", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Welcome ", this.props.data ? this.props.data.me.uName : '', " ", this.props.data ? this.props.data.me.anonymus : '', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: function onClick() {
-          _this.props.logout();
-        }
-      }, "Sign out"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: function onClick() {
-          _this.props.refetch();
-        }
-      }, "Refetch")));
+      if (answer && answer.length === 0) {
+        this.props.history.push("/login");
+      }
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "forgotPassword"
+      }, answer && answer.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "ccm-system-errors alert alert-danger alert-dismissable"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "button",
+        className: "close",
+        "data-dismiss": "alert"
+      }, "\xD7"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, answer)), answer === null && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        onSubmit: this.handleSubmit
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Reset Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "help-block"
+      }, "Enter your new password below."), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "change-password"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "control-label",
+        htmlFor: "uPassword"
+      }, "New Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "password",
+        name: "password",
+        id: "password",
+        className: "form-control",
+        autoFocus: "autofocus",
+        autoComplete: "off",
+        value: this.state.password,
+        onChange: this.handleInputChange
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "control-label",
+        htmlFor: "uPassword"
+      }, "Confirm New Password"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "password",
+        name: "passwordConfirm",
+        id: "passwordConfirm",
+        className: "form-control",
+        autoComplete: "off",
+        value: this.state.passwordConfirm,
+        onChange: this.handleInputChange
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "btn btn-primary"
+      }, "Change password and sign in")))));
     }
   }]);
 
-  return MeForm;
+  return ChangePasswordForm;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-MeForm.propTypes = {
-  logout: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
-  refetch: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
-  data: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
-  answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool
+ChangePasswordForm.propTypes = {
+  changePassword: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
+  location: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array,
+  match: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
+  history: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object
 };
-function Me(_ref) {
-  var location = _ref.location,
+function ChangePassword(_ref) {
+  var match = _ref.match,
       history = _ref.history;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
@@ -125,31 +187,25 @@ function Me(_ref) {
       answer = _useState2[0],
       setAnswer = _useState2[1];
 
-  var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGOUT, {
+  var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(CHANGE_PASSWORD, {
     onCompleted: function onCompleted(_ref2) {
-      var logoutAnswer = _ref2.logout;
-      Object(Utils_Token__WEBPACK_IMPORTED_MODULE_5__["setIsLoggedIn"])(logoutAnswer.authToken);
-      Object(Utils_Token__WEBPACK_IMPORTED_MODULE_5__["setLoggedOut"])();
-      history.push("/");
+      var changePassword = _ref2.changePassword;
+      setAnswer(changePassword);
     }
   }),
       _useMutation2 = _slicedToArray(_useMutation, 2),
-      logout = _useMutation2[0],
+      changePassword = _useMutation2[0],
       _useMutation2$ = _useMutation2[1],
       loading = _useMutation2$.loading,
       error = _useMutation2$.error;
 
-  var _useQuery = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useQuery"])(ME),
-      data = _useQuery.data,
-      refetch = _useQuery.refetch;
-
-  if (loading) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Loading__WEBPACK_IMPORTED_MODULE_4__["default"], null);
+  if (loading) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Loading__WEBPACK_IMPORTED_MODULE_4__["default"], null);
   if (error) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "An error occurred");
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MeForm, {
-    logout: logout,
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ChangePasswordForm, {
+    changePassword: changePassword,
     answer: answer,
-    data: data,
-    refetch: refetch
+    match: match,
+    history: history
   });
 }
 

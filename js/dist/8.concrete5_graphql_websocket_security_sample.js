@@ -110,17 +110,16 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var answer = this.props.answer;
-      Object(Log__WEBPACK_IMPORTED_MODULE_5__["default"])(answer);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "forgotPassword"
-      }, answer === '' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Anweisungen zum Zur\xFCcksetzen gesendet"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, answer && answer.length === 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Anweisungen zum Zur\xFCcksetzen gesendet"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "ccm-message"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "help-block"
       }, "Wenn diese E-Mail-Adresse einem Konto zugeordnet ist, wurde eine E-Mail mit Anweisungen zum Zur\xFCcksetzen des Passwortes an diese Adresse gesendet.", " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "/",
         className: "btn btn-block btn-primary"
-      }, "Zur\xFCck", " ")), answer && answer !== '' && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Zur\xFCck", " ")), answer && answer.length > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "ccm-system-errors alert alert-danger alert-dismissable"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "button",
@@ -155,7 +154,7 @@ function (_React$Component) {
 ForgotPasswordForm.propTypes = {
   forgotPassword: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func,
   location: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object,
-  answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string
+  answer: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.array
 };
 function ForgotPassword() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),

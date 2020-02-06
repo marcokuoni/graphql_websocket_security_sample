@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from "prop-types";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import Loading from "./Loading";
 
-import { setIsLoggedIn } from "Utils/Token";
+import {UserContext} from 'Utils/UserContext';
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
@@ -136,15 +136,21 @@ LoginForm.propTypes = {
     error: PropTypes.string
 };
 
+Login.propTypes = {
+    location: PropTypes.object,
+    history: PropTypes.object
+};
+
 export default function Login({ location, history }) {
+    const [user,setUser] = useContext(UserContext);
+
     const [errorAnswer, setError] = useState("");
     const [login, { loading, error }] = useMutation(LOGIN_USER, {
         onCompleted({ login }) {
-            setIsLoggedIn(login.authToken);
-
             if (login && login.error && login.error !== "") {
                 setError(login.error);
             } else if (login.authToken !== '') {
+                setUser({token: login.authToken});
                 history.push("/me");
             }
         }

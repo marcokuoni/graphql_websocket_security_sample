@@ -20,7 +20,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loading */ "./js/src/components/Loading.jsx");
 /* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+/* harmony import */ var Utils_UserContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Utils/UserContext */ "./js/src/utils/UserContext.jsx");
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -60,6 +61,7 @@ function _templateObject() {
 }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 
 
 
@@ -182,6 +184,10 @@ function Login(_ref) {
   var location = _ref.location,
       history = _ref.history;
 
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_0__["useContext"])(Utils_UserContext__WEBPACK_IMPORTED_MODULE_7__["default"]),
+      _useContext2 = _slicedToArray(_useContext, 1),
+      setUser = _useContext2[0];
+
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(""),
       _useState2 = _slicedToArray(_useState, 2),
       errorAnswer = _useState2[0],
@@ -195,6 +201,7 @@ function Login(_ref) {
       if (login && login.error && login.error !== "") {
         setError(login.error);
       } else if (login.authToken !== '') {
+        setUser(login.authToken);
         history.push("/me");
       }
     }

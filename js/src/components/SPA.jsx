@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { HashRouter as Router, Route, Link } from "react-router-dom";
 import fetch from "unfetch";
-import gql from "graphql-tag";
-import { useMutation } from "@apollo/react-hooks";
 
 import ApolloClient from "apollo-client";
 import { HttpLink } from "apollo-link-http";
@@ -21,13 +19,11 @@ import PrivateRoute from "./PrivateRoute";
 
 import configMap from "Utils/GetGlobals";
 import {
-    getToken,
-    getIsLoggedIn,
-    setIsLoggedIn,
-    setLoggedOut,
+    getUser,
     isTokenExpired
 } from "Utils/Token";
 import MakeError from "Utils/MakeError";
+import {UserContext, UserProvider} from "Utils/UserContext";
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
@@ -52,58 +48,6 @@ function Index() {
     );
 }
 
-const refreshTokenFetch = () =>
-    fetch(
-        (configMap.secureProtocol ? "https://" : "http://") +
-            configMap.refreshTokenUrl,
-        {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }
-    );
-
-const logoutFetch = () =>
-    fetch(
-        (configMap.secureProtocol ? "https://" : "http://") +
-            configMap.logoutUrl,
-        {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                authorization: `Bearer ${getToken()}`
-            }
-        }
-    );
-
-const refreshToken = async function() {
-    try {
-        const response = await refreshTokenFetch();
-        const answer = await response.json();
-
-        if (!answer.authToken || !setIsLoggedIn(answer.authToken)) {
-            const response = await logoutFetch();
-            const answer = await response.json();
-
-            if (!answer.error || answer.error !== "") {
-                setIsLoggedIn(answer.authToken);
-            }
-        }
-    } catch (error) {
-        // full control over handling token fetch Error
-        MakeError("Your refresh token is invalid. Try to relogin", error);
-
-        // your custom action here
-        setLoggedOut();
-
-        document.location.reload(true);
-        window.location = "/";
-    }
-};
-
 const LoadableLogin = Loadable({
     loader: () => import("../single_pages/Login"),
     loading: Loading
@@ -114,47 +58,97 @@ const LoadableMe = Loadable({
     loading: Loading
 });
 
-const httpLink = new HttpLink({
-    uri:
-        (configMap.secureProtocol ? "https://" : "http://") +
-        configMap.graphqlUrl
-});
+function SPAInner() {
+    const [user, setUser] = useContext(UserContext);
 
-const request = async operation => {
-    if (isTokenExpired()) {
-        await refreshToken();
-    }
-    operation.setContext({
-        headers: { Authorization: "Bearer " + getToken() }
-    });
-};
-
-const cache = new InMemoryCache(); //.restore(window.__APOLLO_STATE__);
-
-const client = new ApolloClient({
-    link: ApolloLink.from([
-        new RetryLink({
-            delay: {
-                initial: 300,
-                max: Infinity,
-                jitter: true
-            },
-            attempts: {
-                max: 5,
-                retryIf: error => log("retry") && !!error
+    const refreshTokenFetch = () =>
+        fetch(
+            (configMap.secureProtocol ? "https://" : "http://") +
+                configMap.refreshTokenUrl,
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
             }
-        }),
-        onError(
-            ({
-                graphQLErrors,
-                networkError,
-                operation,
-                forward,
-                response
-            }) => {
+        );
+
+    const logoutFetch = () =>
+        fetch(
+            (configMap.secureProtocol ? "https://" : "http://") +
+                configMap.logoutUrl,
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${user.token}`
+                }
+            }
+        );
+
+    const refreshToken = async function() {
+        try {
+            const response = await refreshTokenFetch();
+            const answer = await response.json();
+
+            if (!answer.authToken && getUser(user.token)) {
+                const response = await logoutFetch();
+                const answer = await response.json();
+
+                if (!answer.error || answer.error !== "") {
+                    setUser({ token: answer.authToken });
+                }
+            } else {
+                setUser({token: answer.authToken});
+            }
+        } catch (error) {
+            // full control over handling token fetch Error
+            MakeError("Your refresh token is invalid. Try to relogin", error);
+
+            // your custom action here
+            setUser({});
+
+            document.location.reload(true);
+            window.location = "/";
+        }
+    };
+
+    const httpLink = new HttpLink({
+        uri:
+            (configMap.secureProtocol ? "https://" : "http://") +
+            configMap.graphqlUrl
+    });
+
+    const request = async operation => {
+        if (isTokenExpired(user.token)) {
+            await refreshToken();
+        }
+        operation.setContext({
+            headers: { Authorization: "Bearer " + user.token }
+        });
+    };
+
+    const cache = new InMemoryCache(); //.restore(window.__APOLLO_STATE__);
+
+    const client = new ApolloClient({
+        link: ApolloLink.from([
+            new RetryLink({
+                delay: {
+                    initial: 300,
+                    max: Infinity,
+                    jitter: true
+                },
+                attempts: {
+                    max: 5,
+                    retryIf: error => log("retry") && !!error
+                }
+            }),
+            onError(({ graphQLErrors, networkError, response }) => {
                 let hasTokenInvalid = true;
                 if (graphQLErrors) {
-                    graphQLErrors.forEach(async (error, index) => {
+                    graphQLErrors.forEach(async (error) => {
                         hasTokenInvalid &= !error.debugMessage;
                         log(hasTokenInvalid);
                     });
@@ -163,14 +157,10 @@ const client = new ApolloClient({
                 if (hasTokenInvalid) {
                     return new Observable(async observer => {
                         if (graphQLErrors) {
-                            graphQLErrors.forEach(
-                                async (message, index) => {
-                                    log(
-                                        `[GraphQL error]: Message: ${message}`
-                                    );
-                                    await refreshToken();
-                                }
-                            );
+                            graphQLErrors.forEach(async (message) => {
+                                log(`[GraphQL error]: Message: ${message}`);
+                                await refreshToken();
+                            });
 
                             return observer.next(response);
                         }
@@ -180,54 +170,59 @@ const client = new ApolloClient({
                         }
                     });
                 }
-            }
-        ),
-        new ApolloLink(
-            (operation, forward) =>
-                new Observable(observer => {
-                    let handle;
-                    Promise.resolve(operation)
-                        .then(oper => request(oper))
-                        .then(() => {
-                            handle = forward(operation).subscribe({
-                                next: observer.next.bind(observer),
-                                error: observer.error.bind(observer),
-                                complete: observer.complete.bind(observer)
-                            });
-                        })
-                        .catch(observer.error.bind(observer));
+            }),
+            new ApolloLink(
+                (operation, forward) =>
+                    new Observable(observer => {
+                        let handle;
+                        Promise.resolve(operation)
+                            .then(oper => request(oper))
+                            .then(() => {
+                                handle = forward(operation).subscribe({
+                                    next: observer.next.bind(observer),
+                                    error: observer.error.bind(observer),
+                                    complete: observer.complete.bind(observer)
+                                });
+                            })
+                            .catch(observer.error.bind(observer));
 
-                    return () => {
-                        if (handle) handle.unsubscribe();
-                    };
-                })
-        ),
-        httpLink
-    ]),
-    cache: cache
-});
+                        return () => {
+                            if (handle) handle.unsubscribe();
+                        };
+                    })
+            ),
+            httpLink
+        ]),
+        cache: cache
+    });
 
-cache.writeData({
-    data: {
-        isLoggedIn: getIsLoggedIn()
-    }
-});
+    cache.writeData({
+        data: {
+            isLoggedIn: getUser(user.token)
+        }
+    });
 
-class SPA extends React.Component {
-    render() {
-        return (
-            <ApolloProvider client={client}>
-                <ApolloHooksProvider client={client}>
-                    <Router hashType="hashbang">
-                        <div>
-                            <Route path="/" exact component={Index} />
-                            <Route path="/login" component={LoadableLogin} />
-                            <PrivateRoute path="/me" component={LoadableMe} />
-                        </div>
-                    </Router>
-                </ApolloHooksProvider>
-            </ApolloProvider>
-        );
-    }
+    return (
+        <ApolloProvider client={client}>
+            <ApolloHooksProvider client={client}>
+                <Router hashType="hashbang">
+                    <div>
+                        <Route path="/" exact component={Index} />
+                        <Route path="/login" component={LoadableLogin} />
+                        <PrivateRoute path="/me" component={LoadableMe} />
+                    </div>
+                </Router>
+            </ApolloHooksProvider>
+        </ApolloProvider>
+    );
 }
+
+function SPA() {
+    return (
+        <UserProvider>
+            <SPAInner />
+        </UserProvider>
+    );
+}
+
 export default SPA;

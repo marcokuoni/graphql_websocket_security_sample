@@ -1,30 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
-import { getIsLoggedIn } from "Utils/Token";
+import {UserContext} from 'Utils/UserContext';
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
+import { getUser } from "../utils/Token";
 
 function PrivateRoute({ component: Component, ...rest }) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    useEffect(() => {
-        function handleIsLoggedInChange(e) {
-            setIsLoggedIn(e.detail && parseInt(e.detail.uID) > 0);
-        }
-        window.addEventListener("isloggedin", handleIsLoggedInChange);
-        return () => {
-            window.removeEventListener("isloggedin", handleIsLoggedInChange);
-        };
-    });
-    const isLoggedInInput = isLoggedIn || getIsLoggedIn();
-    //TODO: creates a lot of rerenders
+    const [user] = useContext(UserContext);
     return (
         <Route
             {...rest}
             render={props =>
-                isLoggedInInput ? (
+                getUser(user.token) ? (
                     <Component {...props} />
                 ) : (
                     <Redirect

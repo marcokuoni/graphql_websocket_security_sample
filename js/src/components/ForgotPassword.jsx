@@ -48,10 +48,10 @@ class ForgotPasswordForm extends React.Component {
     }
     render() {
         const answer = this.props.answer;
-        log(answer)
+        
         return (
             <div className="forgotPassword">
-                {answer === '' && (
+                {answer && answer.length === 0 && (
                     <div>
                         <h4>Anweisungen zum Zurücksetzen gesendet</h4>
                         <div className="ccm-message"></div>
@@ -66,7 +66,7 @@ class ForgotPasswordForm extends React.Component {
                         </a>
                     </div>
                 )}
-                {answer && answer !== '' && (
+                {answer && answer.length > 0 && (
                     <div className="ccm-system-errors alert alert-danger alert-dismissable">
                         <button
                             type="button"
@@ -114,7 +114,7 @@ class ForgotPasswordForm extends React.Component {
 ForgotPasswordForm.propTypes = {
     forgotPassword: PropTypes.func,
     location: PropTypes.object,
-    answer: PropTypes.string
+    answer: PropTypes.array
 };
 
 export default function ForgotPassword() {
