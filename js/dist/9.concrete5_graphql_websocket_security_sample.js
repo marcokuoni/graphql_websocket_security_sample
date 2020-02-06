@@ -20,7 +20,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _Loading__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Loading */ "./js/src/components/Loading.jsx");
 /* harmony import */ var Utils_UserContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Utils/UserContext */ "./js/src/utils/UserContext.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+/* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
+/* harmony import */ var Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! Utils/GetGlobals */ "./js/src/utils/GetGlobals.jsx");
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -60,6 +62,8 @@ function _templateObject() {
 }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
 
 
 
@@ -203,9 +207,14 @@ function Login(_ref) {
       if (login && login.error && login.error !== "") {
         setError(login.error);
       } else if (login.authToken !== '') {
-        setUser({
-          token: login.authToken
-        });
+        localStorage.setItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_8__["globalNames"].authToken, login.authToken);
+        Object(Log__WEBPACK_IMPORTED_MODULE_9__["default"])(Object(Utils_Token__WEBPACK_IMPORTED_MODULE_7__["getUser"])().uID);
+        Object(Log__WEBPACK_IMPORTED_MODULE_9__["default"])(user.uID);
+
+        if (!user || user.uID !== Object(Utils_Token__WEBPACK_IMPORTED_MODULE_7__["getUser"])().uID) {
+          setUser(Object(Utils_Token__WEBPACK_IMPORTED_MODULE_7__["getUser"])());
+        }
+
         history.push("/me");
       }
     }

@@ -49,7 +49,7 @@ function PrivateRoute(_ref) {
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], _extends({}, rest, {
     render: function render(props) {
-      return Object(_utils_Token__WEBPACK_IMPORTED_MODULE_5__["getUser"])(user.token) ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, props) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Redirect"], {
+      return user && parseInt(user.uID) > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, props) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Redirect"], {
         to: {
           pathname: "/login",
           state: {
@@ -128,6 +128,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
  // eslint-disable-next-line no-unused-vars
 
 
@@ -173,7 +174,7 @@ function SPAInner() {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        authorization: "Bearer ".concat(user.token)
+        authorization: "Bearer ".concat(localStorage.getItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["globalNames"].authToken))
       }
     });
   };
@@ -202,7 +203,7 @@ function SPAInner() {
             case 6:
               answer = _context.sent;
 
-              if (!(!answer.authToken && Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])(user.token))) {
+              if (!(!answer.authToken && Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])() !== false)) {
                 _context.next = 17;
                 break;
               }
@@ -219,49 +220,50 @@ function SPAInner() {
               _answer = _context.sent;
 
               if (!_answer.error || _answer.error !== "") {
-                setUser({
-                  token: _answer.authToken
-                });
+                localStorage.setItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["globalNames"].authToken, _answer.authToken);
+
+                if (!user || user.uID !== Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])().uID) {
+                  setUser(Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])());
+                }
               }
 
-              _context.next = 18;
+              _context.next = 19;
               break;
 
             case 17:
-              setUser({
-                token: answer.authToken
-              });
+              localStorage.setItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["globalNames"].authToken, answer.authToken);
 
-            case 18:
-              _context.next = 26;
+              if (!user || user.uID !== Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])().uID) {
+                setUser(Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])());
+              }
+
+            case 19:
+              _context.next = 28;
               break;
 
-            case 20:
-              _context.prev = 20;
+            case 21:
+              _context.prev = 21;
               _context.t0 = _context["catch"](0);
               // full control over handling token fetch Error
               Object(Utils_MakeError__WEBPACK_IMPORTED_MODULE_16__["default"])("Your refresh token is invalid. Try to relogin", _context.t0); // your custom action here
 
               setUser({});
+              localStorage.setItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["globalNames"].authToken, {});
               document.location.reload(true);
               window.location = "/";
 
-            case 26:
+            case 28:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 20]]);
+      }, _callee, null, [[0, 21]]);
     }));
 
     return function refreshToken() {
       return _ref.apply(this, arguments);
     };
   }();
-
-  var httpLink = new apollo_link_http__WEBPACK_IMPORTED_MODULE_4__["HttpLink"]({
-    uri: (Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["default"].secureProtocol ? "https://" : "http://") + Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["default"].graphqlUrl
-  });
 
   var request =
   /*#__PURE__*/
@@ -273,7 +275,7 @@ function SPAInner() {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (!Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["isTokenExpired"])(user.token)) {
+              if (!Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["isTokenExpired"])()) {
                 _context2.next = 3;
                 break;
               }
@@ -284,7 +286,7 @@ function SPAInner() {
             case 3:
               operation.setContext({
                 headers: {
-                  Authorization: "Bearer " + user.token
+                  Authorization: "Bearer " + localStorage.getItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["globalNames"].authToken)
                 }
               });
 
@@ -416,8 +418,8 @@ function SPAInner() {
     }), new apollo_link__WEBPACK_IMPORTED_MODULE_7__["ApolloLink"](function (operation, forward) {
       return new apollo_link__WEBPACK_IMPORTED_MODULE_7__["Observable"](function (observer) {
         var handle;
-        Promise.resolve(operation).then(function (oper) {
-          return request(oper);
+        Promise.resolve(operation).then(function (operation) {
+          return request(operation);
         }).then(function () {
           handle = forward(operation).subscribe({
             next: observer.next.bind(observer),
@@ -429,12 +431,18 @@ function SPAInner() {
           if (handle) handle.unsubscribe();
         };
       });
-    }), httpLink]),
+    }), new apollo_link_http__WEBPACK_IMPORTED_MODULE_4__["HttpLink"]({
+      uri: (Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["default"].secureProtocol ? "https://" : "http://") + Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["default"].graphqlUrl,
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_14__["globalNames"].authToken)
+      },
+      fetch: unfetch__WEBPACK_IMPORTED_MODULE_2__["default"]
+    })]),
     cache: cache
   });
   cache.writeData({
     data: {
-      isLoggedIn: Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])(user.token)
+      isLoggedIn: Object(Utils_Token__WEBPACK_IMPORTED_MODULE_15__["getUser"])() !== false
     }
   });
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_apollo__WEBPACK_IMPORTED_MODULE_5__["ApolloProvider"], {
@@ -477,12 +485,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTokenExpired", function() { return isTokenExpired; });
 /* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
 /* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+/* harmony import */ var _GetGlobals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GetGlobals */ "./js/src/utils/GetGlobals.jsx");
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+
  // eslint-disable-next-line no-unused-vars
 
 
 
-var isTokenExpired = function isTokenExpired(token) {
+var isTokenExpired = function isTokenExpired() {
+  var token = localStorage.getItem(_GetGlobals__WEBPACK_IMPORTED_MODULE_1__["globalNames"].authToken);
+
   if (token && parseInt(jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(token).exp) - 15 > Math.round(new Date().getTime() / 1000)) {
     return false;
   }
@@ -490,15 +502,13 @@ var isTokenExpired = function isTokenExpired(token) {
   return true;
 };
 
-var getUser = function getUser(token) {
+var getUser = function getUser() {
+  var token = localStorage.getItem(_GetGlobals__WEBPACK_IMPORTED_MODULE_1__["globalNames"].authToken);
+
   if (token) {
     var user = jwt_decode__WEBPACK_IMPORTED_MODULE_0___default()(token).data.user;
 
     if (parseInt(user.uID) > 0) {
-      var isLoggedInEvent = new CustomEvent("isloggedin", {
-        detail: user
-      });
-      window.dispatchEvent(isLoggedInEvent);
       return user;
     }
   }
@@ -540,12 +550,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var UserContext = react__WEBPACK_IMPORTED_MODULE_0___default.a.createContext([{}, function () {}]);
 
 var UserProvider = function UserProvider(props) {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
-    token: Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_2__["default"].anonymusToken
-  }),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}),
       _useState2 = _slicedToArray(_useState, 2),
       user = _useState2[0],
       setUser = _useState2[1];
+
+  if (!localStorage.getItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_2__["globalNames"].authToken)) {
+    localStorage.setItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_2__["globalNames"].authToken, Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_2__["default"].anonymusToken);
+  }
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UserContext.Provider, {
     value: [user, setUser]

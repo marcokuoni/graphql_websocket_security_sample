@@ -4,7 +4,9 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import Loading from "../components/Loading";
-import {UserContext} from "Utils/UserContext";
+import { UserContext } from "Utils/UserContext";
+import { getUser } from "Utils/Token";
+import { globalNames } from "Utils/GetGlobals";
 
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
@@ -22,7 +24,6 @@ const ME = gql`
     query me {
         me {
             uName
-            anonymus
         }
     }
 `;
@@ -75,7 +76,7 @@ MeForm.propTypes = {
 };
 
 Me.propTypes = {
-    history: PropTypes.object,
+    history: PropTypes.object
 };
 
 export default function Me({ history }) {
@@ -83,7 +84,10 @@ export default function Me({ history }) {
     const [user, setUser] = useContext(UserContext);
     const [logout, { loading, error }] = useMutation(LOGOUT, {
         onCompleted({ logout: logoutAnswer }) {
-            setUser({token: logoutAnswer.authToken});
+            localStorage.setItem(globalNames.authToken, logoutAnswer.authToken);
+            if(!user || user.uID !== getUser().uID) {
+                setUser(getUser());
+            }
             history.push("/login");
         }
     });
@@ -95,7 +99,5 @@ export default function Me({ history }) {
     if (loading) return <Loading />;
     if (error) return <p>An error occurred</p>;
 
-    return (
-        <MeForm logout={logout} data={data} refetch={refetch} />
-    );
+    return <MeForm logout={logout} data={data} refetch={refetch} />;
 }

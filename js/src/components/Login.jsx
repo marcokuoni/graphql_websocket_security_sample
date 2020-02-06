@@ -7,6 +7,8 @@ import gql from "graphql-tag";
 import Loading from "./Loading";
 
 import {UserContext} from 'Utils/UserContext';
+import { getUser } from "Utils/Token";
+import { globalNames } from "Utils/GetGlobals";
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
@@ -150,7 +152,12 @@ export default function Login({ location, history }) {
             if (login && login.error && login.error !== "") {
                 setError(login.error);
             } else if (login.authToken !== '') {
-                setUser({token: login.authToken});
+                localStorage.setItem(globalNames.authToken, login.authToken);
+                log(getUser().uID);
+                log(user.uID);
+                if(!user || user.uID !== getUser().uID) {
+                    setUser(getUser());
+                }
                 history.push("/me");
             }
         }

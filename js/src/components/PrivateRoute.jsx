@@ -13,7 +13,7 @@ function PrivateRoute({ component: Component, ...rest }) {
         <Route
             {...rest}
             render={props =>
-                getUser(user.token) ? (
+                user && parseInt(user.uID) > 0 ? (
                     <Component {...props} />
                 ) : (
                     <Redirect

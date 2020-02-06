@@ -19,7 +19,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _components_Loading__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Loading */ "./js/src/components/Loading.jsx");
 /* harmony import */ var Utils_UserContext__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! Utils/UserContext */ "./js/src/utils/UserContext.jsx");
-/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
+/* harmony import */ var Utils_Token__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! Utils/Token */ "./js/src/utils/Token.jsx");
+/* harmony import */ var Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! Utils/GetGlobals */ "./js/src/utils/GetGlobals.jsx");
+/* harmony import */ var Log__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! Log */ "./js/src/utils/Log.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -47,7 +49,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["\n    query me {\n        me {\n            uName\n            anonymus\n        }\n    }\n"]);
+  var data = _taggedTemplateLiteral(["\n    query me {\n        me {\n            uName\n        }\n    }\n"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -67,6 +69,8 @@ function _templateObject() {
 }
 
 function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
 
 
 
@@ -134,9 +138,12 @@ function Me(_ref) {
   var _useMutation = Object(_apollo_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useMutation"])(LOGOUT, {
     onCompleted: function onCompleted(_ref2) {
       var logoutAnswer = _ref2.logout;
-      setUser({
-        token: logoutAnswer.authToken
-      });
+      localStorage.setItem(Utils_GetGlobals__WEBPACK_IMPORTED_MODULE_7__["globalNames"].authToken, logoutAnswer.authToken);
+
+      if (!user || user.uID !== Object(Utils_Token__WEBPACK_IMPORTED_MODULE_6__["getUser"])().uID) {
+        setUser(Object(Utils_Token__WEBPACK_IMPORTED_MODULE_6__["getUser"])());
+      }
+
       history.push("/login");
     }
   }),

@@ -18,12 +18,10 @@ import Loading from "./Loading";
 import PrivateRoute from "./PrivateRoute";
 
 import configMap from "Utils/GetGlobals";
-import {
-    getUser,
-    isTokenExpired
-} from "Utils/Token";
+import { getUser, isTokenExpired } from "Utils/Token";
 import MakeError from "Utils/MakeError";
-import {UserContext, UserProvider} from "Utils/UserContext";
+import { UserContext, UserProvider } from "Utils/UserContext";
+import { globalNames } from "Utils/GetGlobals";
 // eslint-disable-next-line no-unused-vars
 import log from "Log";
 
@@ -83,7 +81,9 @@ function SPAInner() {
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    authorization: `Bearer ${user.token}`
+                    authorization: `Bearer ${localStorage.getItem(
+                        globalNames.authToken
+                    )}`
                 }
             }
         );
@@ -93,15 +93,24 @@ function SPAInner() {
             const response = await refreshTokenFetch();
             const answer = await response.json();
 
-            if (!answer.authToken && getUser(user.token)) {
+            if (!answer.authToken && getUser() !== false) {
                 const response = await logoutFetch();
                 const answer = await response.json();
 
                 if (!answer.error || answer.error !== "") {
-                    setUser({ token: answer.authToken });
+                    localStorage.setItem(
+                        globalNames.authToken,
+                        answer.authToken
+                    );
+                    if(!user || user.uID !== getUser().uID) {
+                        setUser(getUser());
+                    }
                 }
             } else {
-                setUser({token: answer.authToken});
+                localStorage.setItem(globalNames.authToken, answer.authToken);
+                if(!user || user.uID !== getUser().uID) {
+                    setUser(getUser());
+                }
             }
         } catch (error) {
             // full control over handling token fetch Error
@@ -109,24 +118,22 @@ function SPAInner() {
 
             // your custom action here
             setUser({});
+            localStorage.setItem(globalNames.authToken, {});
 
             document.location.reload(true);
             window.location = "/";
         }
     };
 
-    const httpLink = new HttpLink({
-        uri:
-            (configMap.secureProtocol ? "https://" : "http://") +
-            configMap.graphqlUrl
-    });
-
     const request = async operation => {
-        if (isTokenExpired(user.token)) {
+        if (isTokenExpired()) {
             await refreshToken();
         }
         operation.setContext({
-            headers: { Authorization: "Bearer " + user.token }
+            headers: {
+                Authorization:
+                    "Bearer " + localStorage.getItem(globalNames.authToken)
+            }
         });
     };
 
@@ -148,7 +155,7 @@ function SPAInner() {
             onError(({ graphQLErrors, networkError, response }) => {
                 let hasTokenInvalid = true;
                 if (graphQLErrors) {
-                    graphQLErrors.forEach(async (error) => {
+                    graphQLErrors.forEach(async error => {
                         hasTokenInvalid &= !error.debugMessage;
                         log(hasTokenInvalid);
                     });
@@ -157,7 +164,7 @@ function SPAInner() {
                 if (hasTokenInvalid) {
                     return new Observable(async observer => {
                         if (graphQLErrors) {
-                            graphQLErrors.forEach(async (message) => {
+                            graphQLErrors.forEach(async message => {
                                 log(`[GraphQL error]: Message: ${message}`);
                                 await refreshToken();
                             });
@@ -176,7 +183,7 @@ function SPAInner() {
                     new Observable(observer => {
                         let handle;
                         Promise.resolve(operation)
-                            .then(oper => request(oper))
+                            .then(operation => request(operation))
                             .then(() => {
                                 handle = forward(operation).subscribe({
                                     next: observer.next.bind(observer),
@@ -191,14 +198,23 @@ function SPAInner() {
                         };
                     })
             ),
-            httpLink
+            new HttpLink({
+                uri:
+                    (configMap.secureProtocol ? "https://" : "http://") +
+                    configMap.graphqlUrl,
+                headers: {
+                    Authorization:
+                        "Bearer " + localStorage.getItem(globalNames.authToken)
+                },
+                fetch
+            })
         ]),
         cache: cache
     });
 
     cache.writeData({
         data: {
-            isLoggedIn: getUser(user.token)
+            isLoggedIn: getUser() !== false
         }
     });
 

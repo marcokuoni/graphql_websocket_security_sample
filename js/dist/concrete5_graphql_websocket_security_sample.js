@@ -322,11 +322,12 @@ window.concrete5_graphql_websocket_security_sample = function () {
 /*!*************************************!*\
   !*** ./js/src/utils/GetGlobals.jsx ***!
   \*************************************/
-/*! exports provided: default */
+/*! exports provided: default, globalNames */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "globalNames", function() { return globalNames; });
 var configMap = {
   settable_map: {
     showDebugInfos: true,
@@ -347,7 +348,11 @@ var configMap = {
   websocketUrl: null,
   anonymusToken: null
 };
+var globalNames = {
+  authToken: "authToken"
+};
 /* harmony default export */ __webpack_exports__["default"] = (configMap);
+
 
 /***/ }),
 

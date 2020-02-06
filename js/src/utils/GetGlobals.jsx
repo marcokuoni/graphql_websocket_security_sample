@@ -19,4 +19,9 @@ const configMap = {
   anonymusToken: null
 };
 
-export default configMap;
+const globalNames = {
+    authToken: "authToken",
+  };
+  
+  export default configMap;
+  export { globalNames };
